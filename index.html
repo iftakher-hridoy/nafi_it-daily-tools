@@ -1,0 +1,1506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<meta name="description" content="VMS – Daily Work Tools. One dashboard, all essential tools: duty & break calculator, shift roster, salary, OCR, QR, PDF, video, CCTV, speed test, IP checker and NAFi iT File Server quick access." />
+<link rel="icon" href="data:," />
+<title>VMS – Daily Work Tools for GitHub Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#070d1f; --bg2:#0a1229; --panel:#0e1730; --panel2:#101d3d; --panel3:#0b142c;
+  --line:#1f2d55; --line2:#2a3c6e;
+  --text:#e9eefb; --muted:#96a5c7; --muted2:#6d7ea6;
+  --blue:#2f7bff; --blue-d:#1c5fe0; --cyan:#38bdf8; --green:#25c07c; --amber:#f5a524; --red:#f4506a; --violet:#8b7bff;
+  --r:14px; --r-sm:10px;
+  --shadow:0 14px 34px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; color:var(--text); background:var(--bg);
+  font-family:"Manrope","Hind Siliguri",system-ui,"Segoe UI",Arial,sans-serif;
+  background-image:
+    linear-gradient(rgba(70,110,220,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70,110,220,.055) 1px, transparent 1px);
+  background-size:44px 44px;
+  background-attachment:fixed;
+  min-height:100vh;
+}
+a{color:var(--cyan)}
+button{font-family:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+::selection{background:rgba(47,123,255,.45)}
+
+/* ---------- Layout ---------- */
+.app{display:grid;grid-template-columns:288px 1fr;gap:20px;max-width:1440px;margin:0 auto;padding:18px 18px 40px}
+aside{display:flex;flex-direction:column;gap:16px;position:sticky;top:18px;align-self:start;max-height:calc(100vh - 36px);overflow:auto;scrollbar-width:thin;padding-right:2px}
+main{min-width:0}
+
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.card-p{padding:18px}
+.brand{padding:16px 18px}
+.brand .logo-row{display:flex;align-items:center;gap:12px}
+.mark{width:40px;height:40px;border-radius:10px;background:var(--blue);display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;flex:none}
+.brand h1{font-size:17px;margin:0;line-height:1.2}
+.brand p{margin:6px 0 0;color:var(--muted);font-size:12.5px;line-height:1.45}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#7ee2ae;background:rgba(37,192,124,.14);border:1px solid rgba(37,192,124,.35);padding:3px 9px;border-radius:999px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block}
+
+.nav-card{padding:12px}
+.nav-title{font-size:11px;letter-spacing:.14em;color:var(--muted2);font-weight:800;padding:4px 8px 8px;text-transform:uppercase}
+.nav{display:flex;flex-direction:column;gap:4px}
+.nav button{display:flex;gap:11px;align-items:flex-start;text-align:left;background:transparent;border:1px solid transparent;color:var(--text);border-radius:11px;padding:9px 10px;width:100%}
+.nav button:hover{background:rgba(47,123,255,.08)}
+.nav button.active{background:rgba(47,123,255,.14);border-color:rgba(47,123,255,.45)}
+.nav .ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none;color:#fff}
+.nav .tt{font-size:13.5px;font-weight:700;line-height:1.25}
+.nav .ds{font-size:11.5px;color:var(--muted);line-height:1.35;margin-top:1px}
+
+.topbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:16px}
+.topbar .tagline{font-size:13px;color:var(--muted)}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- Generic ---------- */
+.btn{background:var(--blue);color:#fff;border:1px solid var(--blue-d);border-radius:10px;padding:10px 16px;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:8px;text-decoration:none}
+.btn:hover{background:#4a8bff}
+.btn.ghost{background:rgba(47,123,255,.1);color:#bcd4ff;border-color:rgba(47,123,255,.4)}
+.btn.green{background:#15945e;border-color:#0f7a4c}
+.btn.red{background:transparent;color:#ff8fa3;border-color:rgba(244,80,106,.5)}
+.btn.sm{padding:7px 11px;font-size:12.5px;border-radius:8px}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.tool{display:none}
+.tool.active{display:block;animation:fade .18s ease}
+@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.tool.active{animation:none} html{scroll-behavior:auto}}
+.tool-head{padding:20px 20px 6px}
+.tool-head h2{margin:0;font-size:21px}
+.tool-head p{margin:5px 0 12px;color:var(--muted);font-size:13.5px;line-height:1.5}
+.tool-body{padding:6px 20px 20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;background:var(--panel3);border:1px solid var(--line2);border-radius:9px;color:var(--text);padding:10px 12px;font-size:14.5px;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue)}
+.field textarea{min-height:120px;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.row>*{flex:1;min-width:130px}
+.row>.noflex{flex:none;min-width:0}
+.drop{border:1.6px dashed var(--line2);border-radius:12px;padding:26px 16px;text-align:center;color:var(--muted);background:rgba(10,18,41,.5)}
+.drop strong{color:var(--text)}
+.drop input[type=file]{margin-top:10px;color:var(--muted);max-width:100%}
+.out{background:var(--panel3);border:1px solid var(--line);border-radius:10px;padding:13px 15px;font-size:14px;line-height:1.6;word-break:break-word}
+.out:empty{display:none}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px}
+.note{font-size:12.5px;color:var(--muted);line-height:1.55}
+.warn{background:rgba(245,165,36,.1);border:1px solid rgba(245,165,36,.4);color:#ffd9a0;border-radius:10px;padding:11px 14px;font-size:13px;line-height:1.55}
+.err{background:rgba(244,80,106,.1);border:1px solid rgba(244,80,106,.45);color:#ffb3c0;border-radius:10px;padding:11px 14px;font-size:13px;line-height:1.55}
+.okbox{background:rgba(37,192,124,.1);border:1px solid rgba(37,192,124,.4);color:#a9eccd;border-radius:10px;padding:11px 14px;font-size:13px;line-height:1.55}
+progress{width:100%;height:10px;appearance:none}
+progress::-webkit-progress-bar{background:var(--panel3);border-radius:99px}
+progress::-webkit-progress-value{background:var(--blue);border-radius:99px}
+progress::-moz-progress-bar{background:var(--blue);border-radius:99px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel3)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:14px 0}
+.stat{background:var(--panel3);border:1px solid var(--line);border-radius:11px;padding:13px 14px}
+.stat .v{font-size:21px;font-weight:800}
+.stat .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700;margin-top:2px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{background:var(--panel3);color:var(--muted);border:1px solid var(--line2);border-radius:999px;padding:7px 14px;font-weight:700;font-size:13px}
+.tabs button.active{background:var(--blue);color:#fff;border-color:var(--blue-d)}
+.tabpane{display:none}.tabpane.active{display:block}
+.chip{display:inline-block;background:rgba(47,123,255,.14);border:1px solid rgba(47,123,255,.4);color:#bcd4ff;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:700}
+.chip.day{background:rgba(37,192,124,.14);border-color:rgba(37,192,124,.45);color:#8fe6bb}
+.chip.night{background:rgba(139,123,255,.16);border-color:rgba(139,123,255,.5);color:#cfc6ff}
+.chip.off{background:rgba(244,80,106,.12);border-color:rgba(244,80,106,.4);color:#ff9fb0}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{background:var(--panel3);color:var(--muted);border:1px solid var(--line2);border-radius:9px;padding:8px 13px;font-weight:700;font-size:13px}
+.seg button.active{background:var(--blue);color:#fff;border-color:var(--blue-d)}
+.slotrow{display:flex;gap:8px;align-items:end;margin-bottom:8px;flex-wrap:wrap}
+.slotrow .field{margin:0;flex:1;min-width:120px}
+.big-shift{font-size:34px;font-weight:800;line-height:1.1}
+.kv{display:grid;grid-template-columns:170px 1fr;gap:6px 14px;font-size:14px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;word-break:break-word}
+video{max-width:100%;border-radius:10px;background:#000}
+.home-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.home-grid button{text-align:left;background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:12px;padding:15px;color:var(--text)}
+.home-grid button:hover{border-color:var(--blue)}
+.home-grid .ic{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;margin-bottom:9px}
+.home-grid .tt{font-weight:800;font-size:14.5px}
+.home-grid .ds{color:var(--muted);font-size:12.5px;margin-top:3px;line-height:1.45}
+.roster-cell{cursor:pointer;text-align:center;font-weight:700;font-size:12px;border-radius:6px;padding:5px 2px;min-width:44px}
+.roster-cell.D{background:rgba(37,192,124,.18);color:#8fe6bb}
+.roster-cell.N{background:rgba(139,123,255,.2);color:#cfc6ff}
+.roster-cell.O{background:rgba(244,80,106,.14);color:#ff9fb0}
+.roster-cell.today{outline:2px solid var(--amber);outline-offset:-2px}
+footer{color:var(--muted2);font-size:12.5px;text-align:center;padding:8px 0 4px;line-height:1.6}
+.server-addr{font-size:clamp(19px,4.5vw,30px);font-weight:800;letter-spacing:.01em;word-break:break-all}
+.steps{counter-reset:st;padding-left:0;list-style:none}
+.steps li{counter-increment:st;margin-bottom:12px;padding-left:44px;position:relative;line-height:1.55;font-size:14.5px;color:var(--text)}
+.steps li::before{content:counter(st);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:grid;place-items:center;font-size:14px}
+.steps code,.inline-code{background:var(--panel3);border:1px solid var(--line2);border-radius:6px;padding:1px 7px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;color:#bcd4ff}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1020px){
+  .app{grid-template-columns:1fr;padding:12px 12px 34px}
+  aside{position:static;max-height:none;overflow:visible}
+  .nav{flex-direction:row;flex-wrap:wrap}
+  .nav button{width:auto;flex:1 1 150px}
+  .nav .ds{display:none}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .home-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .kv{grid-template-columns:1fr}
+  .kv dt{font-weight:700}
+}
+@media (max-width:520px){
+  .home-grid{grid-template-columns:1fr}
+  .tool-head,.tool-body{padding-left:14px;padding-right:14px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside>
+    <div class="card brand">
+      <div class="logo-row">
+        <div class="mark">V</div>
+        <div>
+          <h1>VMS – Daily Work Tools</h1>
+          <p>One Dashboard • All Essential Tools • Always Accessible</p>
+        </div>
+      </div>
+      <p style="margin-top:12px"><span class="pill"><span class="dot"></span> Runs in your browser</span></p>
+      <p>Files are processed on this device. Duty log &amp; roster entries are kept in this browser so you can continue tomorrow.</p>
+    </div>
+
+    <div class="card nav-card">
+      <div class="nav-title">Select tool</div>
+      <nav class="nav" id="toolNav"></nav>
+    </div>
+
+    <div class="card card-p">
+      <div class="nav-title" style="padding-left:0">NAFi iT File Server</div>
+      <p class="note" style="margin:0 0 10px">Quick Access — office file server</p>
+      <a class="btn sm" href="http://103.180.245.108:39942" target="_blank" rel="noopener">Open File Server ↗</a>
+      <button class="btn ghost sm" type="button" data-copy="103.180.245.108:39942">Copy address</button>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main>
+    <div class="topbar">
+      <div class="tagline" id="clockLine">Dhaka • New York • Dublin — live clocks in Time Zone tool</div>
+      <div class="top-actions">
+        <button class="btn ghost sm" type="button" data-goto="speed">⚡ Speed test</button>
+        <button class="btn ghost sm" type="button" data-goto="github">GitHub Pages guide</button>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <section class="tool active" id="tool-home">
+      <div class="card">
+        <div class="tool-head">
+          <h2>All tools</h2>
+          <p>Pick a tool below, or use the list on the left. Everything runs right here in the browser — no sign-up, nothing to install. This same single file can be hosted free on GitHub Pages (see the guide at the bottom of the list).</p>
+        </div>
+        <div class="tool-body"><div class="home-grid" id="homeGrid"></div></div>
+      </div>
+    </section>
+
+    <!-- 1. DUTY -->
+    <section class="tool" id="tool-duty">
+      <div class="card">
+        <div class="tool-head"><h2>Monthly Duty &amp; Break Time Calculator</h2>
+        <p>Add each day's in/out slots (morning, midday, afternoon…), set the break minutes, and the tool works out net hours, late minutes and overtime for the whole month. Entries are saved in this browser.</p></div>
+        <div class="tool-body">
+          <div class="row">
+            <div class="field"><label>Expected start (for late)</label><input type="time" id="dutyExpected" value="06:30"></div>
+            <div class="field"><label>Standard hours / day (for overtime)</label><input type="number" id="dutyStd" value="8" step="0.25" min="0"></div>
+            <div class="field"><label>Show month</label><input type="month" id="dutyMonth"></div>
+          </div>
+          <div class="card-p" style="background:var(--panel3);border:1px solid var(--line);border-radius:12px;margin:6px 0 14px">
+            <div class="row">
+              <div class="field"><label>Date</label><input type="date" id="dutyDate"></div>
+              <div class="field"><label>Break (minutes)</label><input type="number" id="dutyBreak" value="0" min="0" step="5"></div>
+              <div class="field"><label>Day off?</label><select id="dutyOff"><option value="no">Working day</option><option value="yes">Day Off</option></select></div>
+            </div>
+            <div id="slotList"></div>
+            <div class="row" style="margin-top:8px">
+              <button class="btn ghost sm noflex" type="button" id="addSlotBtn">+ Add time slot</button>
+              <button class="btn noflex" type="button" id="addDutyBtn">Save day entry</button>
+            </div>
+          </div>
+          <div class="stat-grid">
+            <div class="stat"><div class="v" id="dutyTotalNet">0h 00m</div><div class="k">Monthly net duty</div></div>
+            <div class="stat"><div class="v" id="dutyDays">0</div><div class="k">Days present</div></div>
+            <div class="stat"><div class="v" id="dutyLate">0m</div><div class="k">Total late</div></div>
+            <div class="stat"><div class="v" id="dutyOT">0h 00m</div><div class="k">Total overtime</div></div>
+          </div>
+          <div class="tblwrap"><table>
+            <thead><tr><th>Date</th><th>Slots (In – Out)</th><th>Break</th><th>Net</th><th>Late</th><th>OT</th><th></th></tr></thead>
+            <tbody id="dutyRows"></tbody>
+          </table></div>
+          <p class="note" id="dutyEmpty">No entries for this month yet — add your first day above. Nothing is pre-filled; the log starts empty and is yours to fill.</p>
+          <div class="row" style="margin-top:12px">
+            <button class="btn green noflex" type="button" id="dutyCsvBtn">⬇ Export CSV (opens in Excel)</button>
+            <button class="btn red noflex" type="button" id="dutyClearBtn">Clear this month</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ROSTER -->
+    <section class="tool" id="tool-roster">
+      <div class="card">
+        <div class="tool-head"><h2>Shift Schedule Generator &amp; Today's Duty</h2>
+        <p>Add employees, set each person's weekly off day, then generate the month. Click any cell in the roster to cycle Day → Night → Off. The roster starts empty — add your own team.</p></div>
+        <div class="tool-body">
+          <div class="row">
+            <div class="field"><label>Employee name</label><input type="text" id="empName" placeholder="e.g. Md. Sharif"></div>
+            <div class="field"><label>Role / ID (optional)</label><input type="text" id="empRole" placeholder="e.g. Roll No. 20"></div>
+            <div class="field"><label>Weekly off day</label><select id="empOff">
+              <option value="-1">No fixed off day</option><option value="0">Sunday</option><option value="1">Monday</option><option value="2">Tuesday</option><option value="3">Wednesday</option><option value="4">Thursday</option><option value="5">Friday</option><option value="6">Saturday</option></select></div>
+            <div class="field"><label>Default shift</label><select id="empShift"><option value="D">Day</option><option value="N">Night</option></select></div>
+            <button class="btn noflex" type="button" id="addEmpBtn">Add employee</button>
+          </div>
+          <div id="empList" style="margin:10px 0"></div>
+          <div class="row">
+            <div class="field"><label>Roster month</label><input type="month" id="rosterMonth"></div>
+            <button class="btn noflex" type="button" id="genRosterBtn">Generate / refresh roster</button>
+            <button class="btn ghost noflex" type="button" id="rosterCsvBtn">⬇ Export roster CSV</button>
+          </div>
+          <div class="card-p" style="background:var(--panel3);border:1px solid var(--line);border-radius:12px;margin:14px 0">
+            <div class="nav-title" style="padding-left:0">Today's duty — check yours</div>
+            <div class="row">
+              <div class="field"><label>Who are you?</label><select id="todayEmp"></select></div>
+              <div><div class="note">Today</div><div class="big-shift" id="todayShift">—</div><div class="note" id="todayShiftSub">Add an employee and generate the roster to see today's shift.</div></div>
+            </div>
+            <div id="todayAll" style="margin-top:10px"></div>
+          </div>
+          <div class="tblwrap"><table><thead id="rosterHead"></thead><tbody id="rosterBody"></tbody></table></div>
+          <p class="note">Tip: an amber outline marks today's column. Clicking a cell changes only that day for that employee.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SALARY -->
+    <section class="tool" id="tool-salary">
+      <div class="card">
+        <div class="tool-head"><h2>Salary &amp; Hourly Rate Calculator</h2>
+        <p>Hourly rate × hours, with an overtime multiplier. You can pull the total hours straight from your Duty log.</p></div>
+        <div class="tool-body">
+          <div class="grid2">
+            <div>
+              <div class="field"><label>Hourly rate (৳ or your currency)</label><input type="number" id="salRate" min="0" step="any" placeholder="e.g. 250"></div>
+              <div class="field"><label>Regular hours</label><input type="number" id="salHours" min="0" step="any" placeholder="e.g. 160"></div>
+              <div class="field"><label>Overtime hours</label><input type="number" id="salOT" min="0" step="any" value="0"></div>
+              <div class="field"><label>Overtime multiplier</label><input type="number" id="salOTx" min="0" step="0.1" value="1.5"></div>
+              <div class="field"><label>Hours per week (for weekly figure)</label><input type="number" id="salWeekH" min="0" step="any" value="48"></div>
+              <div class="row">
+                <button class="btn noflex" type="button" id="salCalcBtn">Calculate</button>
+                <button class="btn ghost noflex" type="button" id="salFromDutyBtn">Use Duty log totals</button>
+              </div>
+            </div>
+            <div>
+              <div class="stat-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
+                <div class="stat"><div class="v" id="salWeekly">—</div><div class="k">Weekly pay</div></div>
+                <div class="stat"><div class="v" id="salMonthly">—</div><div class="k">Total pay (entered hours)</div></div>
+                <div class="stat"><div class="v" id="salRegPay">—</div><div class="k">Regular pay</div></div>
+                <div class="stat"><div class="v" id="salOTPay">—</div><div class="k">Overtime pay</div></div>
+              </div>
+              <div class="out" id="salNote"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. OCR -->
+    <section class="tool" id="tool-ocr">
+      <div class="card">
+        <div class="tool-head"><h2>Image to Text (OCR)</h2>
+        <p>Extract text from a JPG, PNG or screenshot — English and Bangla. The recognition engine loads from the internet the first time, so a slow connection may take a moment.</p></div>
+        <div class="tool-body">
+          <div class="drop"><strong>Choose an image</strong><br><input type="file" id="ocrFile" accept="image/*"></div>
+          <div class="row" style="margin-top:12px">
+            <div class="field"><label>Language</label><select id="ocrLang"><option value="eng+ben">English + বাংলা</option><option value="eng">English only</option><option value="ben">বাংলা only</option></select></div>
+            <button class="btn noflex" type="button" id="ocrBtn">Extract text</button>
+            <button class="btn ghost noflex" type="button" id="ocrCopyBtn">Copy result</button>
+          </div>
+          <div id="ocrProgWrap" style="display:none;margin-top:10px"><progress id="ocrProg" value="0" max="1"></progress><div class="note" id="ocrStatus"></div></div>
+          <div class="field" style="margin-top:12px"><label>Extracted text</label><textarea id="ocrOut" placeholder="Text will appear here…"></textarea></div>
+          <div id="ocrMsg"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. QR SCANNER -->
+    <section class="tool" id="tool-qrscan">
+      <div class="card">
+        <div class="tool-head"><h2>QR Code Scanner</h2>
+        <p>Read a QR code from an image file or with your camera. URLs become clickable, and Wi-Fi QR codes are broken down into SSID, password and security type.</p></div>
+        <div class="tool-body">
+          <div class="drop"><strong>Choose a QR image</strong><br><input type="file" id="qrFile" accept="image/*"></div>
+          <div class="row" style="margin-top:12px">
+            <button class="btn noflex" type="button" id="qrCamStart">📷 Start camera scan</button>
+            <button class="btn ghost noflex" type="button" id="qrCamStop">Stop camera</button>
+          </div>
+          <video id="qrVideo" playsinline muted style="display:none;margin-top:12px;width:100%"></video>
+          <canvas id="qrCanvas" style="display:none"></canvas>
+          <div class="field" style="margin-top:14px"><label>Decoded result</label><textarea id="qrOut" readonly placeholder="No QR decoded yet…"></textarea></div>
+          <div id="qrParsed"></div>
+          <div class="row"><button class="btn ghost noflex" type="button" id="qrCopyBtn">Copy result</button><span id="qrLinkWrap"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. PDF -->
+    <section class="tool" id="tool-pdf">
+      <div class="card">
+        <div class="tool-head"><h2>PDF Tools</h2>
+        <p>Merge, split, compress, PDF → JPG and JPG → PDF — all in the browser, files never leave this device.</p></div>
+        <div class="tool-body">
+          <div class="tabs" id="pdfTabs">
+            <button type="button" class="active" data-pane="pdfMerge">Merge</button>
+            <button type="button" data-pane="pdfSplit">Split</button>
+            <button type="button" data-pane="pdfCompress">Compress</button>
+            <button type="button" data-pane="pdfToJpg">PDF to JPG</button>
+            <button type="button" data-pane="jpgToPdf">JPG to PDF</button>
+          </div>
+          <div class="tabpane active" id="pdfMerge">
+            <div class="drop"><strong>Add 2 or more PDFs</strong> (they merge in the order chosen)<br><input type="file" id="mergeFiles" accept="application/pdf" multiple></div>
+            <div class="row" style="margin-top:12px"><button class="btn noflex" type="button" id="mergeBtn">Merge PDFs</button><span id="mergeMsg"></span></div>
+          </div>
+          <div class="tabpane" id="pdfSplit">
+            <div class="drop"><strong>Choose one PDF</strong><br><input type="file" id="splitFile" accept="application/pdf"></div>
+            <div class="row" style="margin-top:12px">
+              <div class="field"><label>Pages to extract (e.g. 1-3,5)</label><input type="text" id="splitRange" placeholder="1-3,5"></div>
+              <button class="btn noflex" type="button" id="splitBtn">Extract pages</button>
+            </div>
+            <div id="splitMsg" style="margin-top:10px"></div>
+          </div>
+          <div class="tabpane" id="pdfCompress">
+            <div class="drop"><strong>Choose one PDF</strong><br><input type="file" id="compFile" accept="application/pdf"></div>
+            <div class="row" style="margin-top:12px"><button class="btn noflex" type="button" id="compBtn">Compress PDF</button></div>
+            <div id="compMsg" style="margin-top:10px"></div>
+            <p class="note">This re-saves the PDF with compressed object streams — it shrinks many files, especially ones saved by scanners/apps with bloated structure. It does not re-compress photos inside the PDF, so image-heavy files may barely change.</p>
+          </div>
+          <div class="tabpane" id="pdfToJpg">
+            <div class="drop"><strong>Choose one PDF</strong><br><input type="file" id="p2jFile" accept="application/pdf"></div>
+            <div class="row" style="margin-top:12px">
+              <div class="field"><label>Render scale (quality)</label><select id="p2jScale"><option value="1.5">Normal</option><option value="2.5">High</option><option value="1">Small</option></select></div>
+              <button class="btn noflex" type="button" id="p2jBtn">Convert pages to JPG</button>
+            </div>
+            <div id="p2jMsg" style="margin-top:10px"></div>
+            <div id="p2jOut" style="display:grid;gap:12px;margin-top:12px"></div>
+          </div>
+          <div class="tabpane" id="jpgToPdf">
+            <div class="drop"><strong>Add JPG / PNG images</strong><br><input type="file" id="j2pFiles" accept="image/jpeg,image/png" multiple></div>
+            <div class="row" style="margin-top:12px"><button class="btn noflex" type="button" id="j2pBtn">Make PDF</button><span id="j2pMsg"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. VIDEO CONVERT -->
+    <section class="tool" id="tool-vconvert">
+      <div class="card">
+        <div class="tool-head"><h2>Video Format Converter</h2>
+        <p>WMV, AVI, MOV or MKV → MP4, converted on this device with an in-browser FFmpeg engine. Best for files under ~500 MB.</p></div>
+        <div class="tool-body">
+          <div class="warn">Heads-up: the converter engine needs your browser to allow <em>SharedArrayBuffer</em>. On plain GitHub Pages hosting that is sometimes blocked, and the tool will tell you honestly if the engine cannot start — the rest of the site still works.</div>
+          <div class="drop" style="margin-top:14px"><strong>Drag &amp; drop your video, or choose a file</strong><br><input type="file" id="vcFile" accept="video/*,.wmv,.avi,.mkv,.mov"></div>
+          <div class="row" style="margin-top:12px"><button class="btn noflex" type="button" id="vcBtn">Convert to MP4</button><span class="note" id="vcStatus"></span></div>
+          <div id="vcProgWrap" style="display:none;margin-top:10px"><progress id="vcProg" value="0" max="1"></progress></div>
+          <div id="vcMsg" style="margin-top:10px"></div>
+          <div id="vcOut" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. VIDEO COMPRESS + SIZE CONVERTER -->
+    <section class="tool" id="tool-vcompress">
+      <div class="card">
+        <div class="tool-head"><h2>Video Compressor</h2>
+        <p>Reduce a video's file size while keeping the picture watchable. Pick a target resolution, quality and frame rate, then compress on-device.</p></div>
+        <div class="tool-body">
+          <div class="drop"><strong>Choose a video</strong><br><input type="file" id="vpFile" accept="video/*,.wmv,.avi,.mkv,.mov"></div>
+          <div class="row" style="margin-top:12px">
+            <div class="field"><label>Resolution</label><select id="vpRes"><option value="0">Keep original</option><option value="1080">1080p</option><option value="720">720p</option><option value="480">480p</option><option value="360">360p</option></select></div>
+            <div class="field"><label>Quality (CRF — higher = smaller)</label><select id="vpCrf"><option value="23">Balanced (23)</option><option value="28">Smaller file (28)</option><option value="32">Smallest (32)</option><option value="18">High quality (18)</option></select></div>
+            <div class="field"><label>FPS</label><select id="vpFps"><option value="0">Keep original</option><option value="30">30</option><option value="25">25</option><option value="24">24</option><option value="15">15</option></select></div>
+            <button class="btn noflex" type="button" id="vpBtn">Compress video</button>
+          </div>
+          <div class="note" id="vpStatus"></div>
+          <div id="vpProgWrap" style="display:none;margin-top:8px"><progress id="vpProg" value="0" max="1"></progress></div>
+          <div id="vpMsg" style="margin-top:10px"></div>
+          <div id="vpOut" style="margin-top:10px"></div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:22px 0">
+          <h3 style="margin:0 0 4px">File Size Converter</h3>
+          <p class="note" style="margin-top:0">Convert between KB, MB, GB and TB (1 MB = 1024 KB).</p>
+          <div class="row">
+            <div class="field"><label>Value</label><input type="number" id="fsVal" value="500" step="any" min="0"></div>
+            <div class="field"><label>From</label><select id="fsFrom"><option value="KB">KB</option><option value="MB" selected>MB</option><option value="GB">GB</option><option value="TB">TB</option><option value="B">Bytes</option></select></div>
+            <button class="btn ghost noflex" type="button" id="fsBtn">Convert</button>
+          </div>
+          <div class="out" id="fsOut" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. VIDEO TIMESTAMP -->
+    <section class="tool" id="tool-vtimestamp">
+      <div class="card">
+        <div class="tool-head"><h2>Video Timestamp Calculator</h2>
+        <p>For CCTV footage work: duration between two times, AM/PM → 24-hour conversion, and incident-time calculation (camera time ± clock difference).</p></div>
+        <div class="tool-body">
+          <h3 style="margin:4px 0 8px">Footage duration / time difference</h3>
+          <div class="row">
+            <div class="field"><label>Start (date + time)</label><input type="datetime-local" id="tsStart" step="1"></div>
+            <div class="field"><label>End (date + time)</label><input type="datetime-local" id="tsEnd" step="1"></div>
+            <button class="btn noflex" type="button" id="tsBtn">Calculate duration</button>
+          </div>
+          <div class="out" id="tsOut" style="margin-top:10px"></div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:20px 0">
+          <h3 style="margin:4px 0 8px">AM/PM → 24-hour converter</h3>
+          <div class="row">
+            <div class="field"><label>Time in 12-hour format (e.g. 3:25 PM)</label><input type="text" id="ampmIn" placeholder="3:25 PM"></div>
+            <button class="btn ghost noflex" type="button" id="ampmBtn">Convert</button>
+          </div>
+          <div class="out" id="ampmOut" style="margin-top:10px"></div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:20px 0">
+          <h3 style="margin:4px 0 8px">Incident time calculation</h3>
+          <p class="note" style="margin-top:0">Example: an incident shows 14:10 on the DVR, but the DVR clock is 7 minutes fast — the real incident time is 14:03.</p>
+          <div class="row">
+            <div class="field"><label>Time shown on camera/DVR</label><input type="time" id="incTime" step="1"></div>
+            <div class="field"><label>Clock difference (minutes)</label><input type="number" id="incOff" value="0" step="1"></div>
+            <div class="field"><label>Direction</label><select id="incDir"><option value="fast">Camera clock is FAST (subtract)</option><option value="slow">Camera clock is SLOW (add)</option></select></div>
+            <button class="btn noflex" type="button" id="incBtn">Get real time</button>
+          </div>
+          <div class="out" id="incOut" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. VIDEO SPEED -->
+    <section class="tool" id="tool-vspeed">
+      <div class="card">
+        <div class="tool-head"><h2>Video Speed Controller</h2>
+        <p>Review footage slowly or skim it fast: 0.25×, 0.5×, 1×, 2× and 4× playback, plus frame-by-frame stepping.</p></div>
+        <div class="tool-body">
+          <div class="drop"><strong>Choose a video</strong><br><input type="file" id="vsFile" accept="video/*"></div>
+          <video id="vsPlayer" controls style="margin-top:14px;width:100%;display:none"></video>
+          <div class="seg" id="vsSeg" style="margin-top:12px">
+            <button type="button" data-rate="0.25">0.25×</button>
+            <button type="button" data-rate="0.5">0.5×</button>
+            <button type="button" data-rate="1" class="active">1×</button>
+            <button type="button" data-rate="2">2×</button>
+            <button type="button" data-rate="4">4×</button>
+            <button type="button" id="vsBack">⏮ −5s</button>
+            <button type="button" id="vsFwd">+5s ⏭</button>
+            <button type="button" id="vsFrame">Step 1 frame</button>
+          </div>
+          <div class="note" id="vsInfo" style="margin-top:8px">No video loaded yet.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. SPEED TEST -->
+    <section class="tool" id="tool-speed">
+      <div class="card">
+        <div class="tool-head"><h2>Internet Speed Test</h2>
+        <p>Real download, upload, ping and jitter measured against Cloudflare's speed endpoints from this device, on this connection.</p></div>
+        <div class="tool-body">
+          <div class="row"><button class="btn noflex" type="button" id="speedBtn">▶ Run speed test</button><span class="note" id="speedStatus">Idle — press run when ready. Uses about 35 MB of data.</span></div>
+          <div class="stat-grid">
+            <div class="stat"><div class="v" id="spDown">—</div><div class="k">Download (Mbps)</div></div>
+            <div class="stat"><div class="v" id="spUp">—</div><div class="k">Upload (Mbps)</div></div>
+            <div class="stat"><div class="v" id="spPing">—</div><div class="k">Ping (ms)</div></div>
+            <div class="stat"><div class="v" id="spJitter">—</div><div class="k">Jitter (ms)</div></div>
+          </div>
+          <div class="out" id="speedServer"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. IP CHECKER -->
+    <section class="tool" id="tool-ip">
+      <div class="card">
+        <div class="tool-head"><h2>My IP &amp; ISP Checker</h2>
+        <p>Your public IP address, ISP/organization, approximate location and ASN — looked up live when you press the button.</p></div>
+        <div class="tool-body">
+          <div class="row"><button class="btn noflex" type="button" id="ipBtn">Check my IP</button><span class="note" id="ipStatus"></span></div>
+          <dl class="kv" id="ipOut" style="margin-top:14px"></dl>
+          <div id="ipMsg" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. NETWORK DIAGNOSTICS -->
+    <section class="tool" id="tool-netdiag">
+      <div class="card">
+        <div class="tool-head"><h2>Network Diagnostic Tools</h2>
+        <p>DNS lookup, domain IP, website response test and browser-side ping — plus your local network information.</p></div>
+        <div class="tool-body">
+          <div class="row">
+            <div class="field"><label>Domain (e.g. google.com)</label><input type="text" id="ndDomain" placeholder="google.com"></div>
+            <button class="btn noflex" type="button" id="ndRunBtn">Run checks</button>
+          </div>
+          <div class="out mono" id="ndOut" style="margin-top:12px;white-space:pre-wrap"></div>
+          <div class="warn" style="margin-top:12px">Traceroute note: a web page cannot run a real system traceroute — browsers have no access to ICMP/TTL routing. The checks above give you the DNS answers and real response timing instead, which cover most day-to-day questions. For a true traceroute, run <span class="inline-code">tracert</span> (Windows) or <span class="inline-code">traceroute</span> (Mac/Linux) in a terminal.</div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:20px 0">
+          <h3 style="margin:4px 0 8px">Network information (this device)</h3>
+          <div class="row"><button class="btn ghost noflex" type="button" id="niBtn">Read network info</button></div>
+          <dl class="kv" id="niOut" style="margin-top:12px"></dl>
+          <p class="note">Local IP is detected through WebRTC and may show a private 192.168.x.x / 10.x.x.x address. Gateway and Wi-Fi details (SSID, signal) are not exposed to web pages by any browser — those live in your router/OS settings.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. DATE CALC -->
+    <section class="tool" id="tool-datecalc">
+      <div class="card">
+        <div class="tool-head"><h2>Date Calculator</h2>
+        <p>Difference between two dates, and add/subtract days from a date.</p></div>
+        <div class="tool-body">
+          <div class="row">
+            <div class="field"><label>From</label><input type="date" id="dcFrom"></div>
+            <div class="field"><label>To</label><input type="date" id="dcTo"></div>
+            <button class="btn noflex" type="button" id="dcBtn">Calculate difference</button>
+          </div>
+          <div class="out" id="dcOut" style="margin-top:10px"></div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:20px 0">
+          <div class="row">
+            <div class="field"><label>Start date</label><input type="date" id="dcBase"></div>
+            <div class="field"><label>Days to add (use minus to subtract)</label><input type="number" id="dcDays" value="30"></div>
+            <button class="btn ghost noflex" type="button" id="dcAddBtn">Add days</button>
+          </div>
+          <div class="out" id="dcAddOut" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15. TIME ZONE -->
+    <section class="tool" id="tool-tz">
+      <div class="card">
+        <div class="tool-head"><h2>Time Zone Converter</h2>
+        <p>Bangladesh, USA and Ireland — live clocks plus a converter for any date &amp; time.</p></div>
+        <div class="tool-body">
+          <div class="stat-grid" style="grid-template-columns:repeat(2,1fr)">
+            <div class="stat"><div class="v" id="clkDhaka">—</div><div class="k">Dhaka, Bangladesh</div></div>
+            <div class="stat"><div class="v" id="clkDublin">—</div><div class="k">Dublin, Ireland</div></div>
+            <div class="stat"><div class="v" id="clkNY">—</div><div class="k">New York, USA (ET)</div></div>
+            <div class="stat"><div class="v" id="clkLA">—</div><div class="k">Los Angeles, USA (PT)</div></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Date &amp; time</label><input type="datetime-local" id="tzIn"></div>
+            <div class="field"><label>That time is in</label><select id="tzFrom">
+              <option value="Asia/Dhaka">Bangladesh (Dhaka)</option>
+              <option value="Europe/Dublin">Ireland (Dublin)</option>
+              <option value="America/New_York">USA – New York (ET)</option>
+              <option value="America/Chicago">USA – Chicago (CT)</option>
+              <option value="America/Denver">USA – Denver (MT)</option>
+              <option value="America/Los_Angeles">USA – Los Angeles (PT)</option>
+            </select></div>
+            <button class="btn noflex" type="button" id="tzBtn">Convert</button>
+          </div>
+          <div class="out" id="tzOut" style="margin-top:10px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16. QR GENERATOR -->
+    <section class="tool" id="tool-qrgen">
+      <div class="card">
+        <div class="tool-head"><h2>QR Code Generator</h2>
+        <p>Make a QR code for a URL/text, or a Wi-Fi QR that guests can scan to join your network.</p></div>
+        <div class="tool-body">
+          <div class="tabs" id="qrGenTabs">
+            <button type="button" class="active" data-pane="qgText">URL / Text</button>
+            <button type="button" data-pane="qgWifi">Wi-Fi</button>
+          </div>
+          <div class="tabpane active" id="qgText">
+            <div class="field"><label>URL or text</label><input type="text" id="qgTextIn" placeholder="https://example.com"></div>
+          </div>
+          <div class="tabpane" id="qgWifi">
+            <div class="grid2">
+              <div class="field"><label>Wi-Fi name (SSID)</label><input type="text" id="qgSsid" placeholder="MyWiFi"></div>
+              <div class="field"><label>Password</label><input type="text" id="qgPass" placeholder="password"></div>
+              <div class="field"><label>Security</label><select id="qgSec"><option value="WPA">WPA / WPA2</option><option value="WEP">WEP</option><option value="nopass">Open (no password)</option></select></div>
+            </div>
+          </div>
+          <div class="row"><button class="btn noflex" type="button" id="qgBtn">Generate QR</button>
+          <button class="btn ghost noflex" type="button" id="qgDlBtn">⬇ Download PNG</button></div>
+          <div id="qgOut" style="margin-top:16px;background:#fff;border-radius:12px;padding:16px;width:fit-content;min-width:120px"></div>
+          <div class="note" id="qgEncoded" style="margin-top:8px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 17. DUPLICATE CHECKER -->
+    <section class="tool" id="tool-dup">
+      <div class="card">
+        <div class="tool-head"><h2>Duplicate File Checker</h2>
+        <p>Select several files — each one is hashed (SHA-256) on this device and files with identical content are grouped together, even if their names differ.</p></div>
+        <div class="tool-body">
+          <div class="drop"><strong>Choose files to compare</strong><br><input type="file" id="dupFiles" multiple></div>
+          <div class="row" style="margin-top:12px"><button class="btn noflex" type="button" id="dupBtn">Find duplicates</button><span class="note" id="dupStatus"></span></div>
+          <div id="dupOut" style="margin-top:12px"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 18. FILE SERVER -->
+    <section class="tool" id="tool-server">
+      <div class="card">
+        <div class="tool-head"><h2>NAFi iT File Server</h2>
+        <p>Your office file server — quick access from anywhere on the office network (or VPN, if your office uses one).</p></div>
+        <div class="tool-body" style="text-align:center;padding-top:16px">
+          <div class="note">Quick Access address</div>
+          <div class="server-addr mono">103.180.245.108:39942</div>
+          <div class="row" style="justify-content:center;margin-top:18px">
+            <a class="btn noflex" href="http://103.180.245.108:39942" target="_blank" rel="noopener">Open NAFi iT File Server ↗</a>
+            <button class="btn ghost noflex" type="button" data-copy="103.180.245.108:39942">Copy address</button>
+            <button class="btn ghost noflex" type="button" data-copy="http://103.180.245.108:39942">Copy full URL</button>
+          </div>
+          <p class="note" style="max-width:560px;margin:16px auto 6px">If the server does not open, you are probably outside the office network, or the server PC is off. This page can't check that for you — try again from the office Wi-Fi/LAN.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 19. GITHUB PAGES -->
+    <section class="tool" id="tool-github">
+      <div class="card">
+        <div class="tool-head"><h2>Publish this site free on GitHub Pages</h2>
+        <p>This whole website is one single file — <strong>index.html</strong> — so hosting it takes about five minutes, and then you can open it from anywhere.</p></div>
+        <div class="tool-body">
+          <div class="row" style="margin-bottom:16px">
+            <button class="btn green noflex" type="button" id="dlSelfBtn">⬇ Download index.html</button>
+            <span class="note">Download this exact page as a ready-to-upload <span class="inline-code">index.html</span>. To make a zip: put the file in a folder, right-click the folder → Compress / Send to → Compressed (zipped) folder, then unzip it inside your GitHub repo upload.</span>
+          </div>
+          <ol class="steps">
+            <li><strong>Create a GitHub account</strong> (free) at <a href="https://github.com" target="_blank" rel="noopener">github.com</a>, if you don't have one.</li>
+            <li><strong>Create a new repository:</strong> click <span class="inline-code">+</span> → <em>New repository</em>. Name it e.g. <span class="inline-code">vms-daily-work-tools</span>, keep it <strong>Public</strong>, and create it.</li>
+            <li><strong>Upload the file:</strong> in the new repo, click <em>uploading an existing file</em>, choose the downloaded <span class="inline-code">index.html</span>, and <em>Commit changes</em>. The file must sit in the top level of the repo and be named exactly <span class="inline-code">index.html</span>.</li>
+            <li><strong>Turn on GitHub Pages:</strong> repo → <em>Settings</em> → <em>Pages</em> → under “Build and deployment”, Source = <em>Deploy from a branch</em>, Branch = <span class="inline-code">main</span> / <span class="inline-code">/ (root)</span> → Save.</li>
+            <li><strong>Wait 1–2 minutes</strong>, then your site is live at <span class="inline-code">https://YOUR-USERNAME.github.io/vms-daily-work-tools/</span> — open it from any phone or PC, anywhere. Bookmark it or add it to your home screen.</li>
+            <li><strong>To update later:</strong> upload a new <span class="inline-code">index.html</span> over the old one (same steps) — the site updates within a minute or two.</li>
+          </ol>
+          <div class="warn">Good to know: duty log and roster entries are stored in each browser's own storage. That means entries you type on your phone stay on that phone's browser — they do not sync between devices. Use the CSV export buttons to move a month's data between devices.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>© 2026 VMS – Daily Work Tools • Built for Md. Sharif<br>Engines: FFmpeg.wasm, Tesseract.js, jsQR, pdf-lib, PDF.js &amp; Cloudflare speed endpoints — loaded from CDN when a tool is used.</footer>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.5/dist/tesseract.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+<script>
+"use strict";
+/* ================= helpers ================= */
+var $ = function(id){ return document.getElementById(id); };
+function fmtHM(mins){ mins = Math.round(Math.abs(mins)); var h = Math.floor(mins/60), m = mins%60; return h + "h " + String(m).padStart(2,"0") + "m"; }
+function fmtMoney(n){ return "৳ " + Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2}); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function dl(url, name){ var a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+function dlBlob(blob, name){ var u=URL.createObjectURL(blob); dl(u,name); setTimeout(function(){URL.revokeObjectURL(u);},4000); }
+function timeToMin(t){ if(!t) return null; var p=t.split(":"); return (+p[0])*60 + (+p[1]||0); }
+function store(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function read(k, dflt){ try{ var v=localStorage.getItem(k); return v? JSON.parse(v): dflt; }catch(e){ return dflt; } }
+function todayISO(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function monthOf(iso){ return (iso||"").slice(0,7); }
+function curMonth(){ var d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
+
+/* copy buttons */
+document.addEventListener("click", function(e){
+  var b = e.target.closest("[data-copy]"); if(!b) return;
+  var txt = b.getAttribute("data-copy");
+  if(navigator.clipboard){ var old=b.textContent; navigator.clipboard.writeText(txt).then(function(){ b.textContent="✓ Copied"; setTimeout(function(){ b.textContent=old; },1200); }); }
+});
+
+/* ================= navigation ================= */
+var TOOLS = [
+  ["home","⌂","HOME","All tools dashboard","#5b8def"],
+  ["duty","HR","DUTY & BREAK","Shift length, breaks, late & overtime","#e0637c"],
+  ["roster","📅","SHIFT ROSTER","Employee schedule & today's duty","#25c07c"],
+  ["salary","৳","SALARY","Hourly rate × hours, weekly & monthly","#f5a524"],
+  ["ocr","Aa","IMAGE TO TEXT","Read English & Bangla from images","#3fa66a"],
+  ["qrscan","▦","QR SCANNER","Text, URL & Wi-Fi from QR codes","#8b7bff"],
+  ["pdf","PDF","PDF TOOLS","Merge, split, compress, convert","#d95f4b"],
+  ["vconvert","MP4","VIDEO CONVERT","WMV / AVI / MOV / MKV to MP4","#2f7bff"],
+  ["vcompress","KB","VIDEO COMPRESS","Reduce size, keep the detail","#7a5af8"],
+  ["vtimestamp","⏱","TIMESTAMP CALC","CCTV footage duration & incident time","#38bdf8"],
+  ["vspeed","▶","SPEED CONTROL","0.25× – 4× video playback","#25c07c"],
+  ["speed","⚡","SPEED TEST","Download, upload, ping & jitter","#f5a524"],
+  ["ip","IP","MY IP & ISP","Public IP, ISP, location & ASN","#38bdf8"],
+  ["netdiag","🌐","NETWORK DIAG.","DNS lookup, ping & response test","#5b8def"],
+  ["datecalc","📆","DATE CALC","Date difference & add days","#e0637c"],
+  ["tz","🕐","TIME ZONES","Bangladesh / USA / Ireland","#8b7bff"],
+  ["qrgen","QR","QR GENERATOR","URL & Wi-Fi QR codes","#3fa66a"],
+  ["dup","⧉","DUPLICATE CHECK","Find duplicate files by hash","#d95f4b"],
+  ["server","🗄","FILE SERVER","NAFi iT File Server quick access","#2f7bff"],
+  ["github","GH","GITHUB PAGES","Host this site free, step by step","#96a5c7"]
+];
+var nav = $("toolNav"), homeGrid = $("homeGrid");
+TOOLS.forEach(function(t){
+  var b=document.createElement("button"); b.type="button"; b.setAttribute("data-tool",t[0]);
+  b.innerHTML = '<span class="ic" style="background:'+t[4]+'">'+esc(t[1])+'</span><span><span class="tt">'+esc(t[2])+'</span><div class="ds">'+esc(t[3])+'</div></span>';
+  b.addEventListener("click", function(){ showTool(t[0]); });
+  nav.appendChild(b);
+  if(t[0]!=="home"){
+    var h=document.createElement("button"); h.type="button";
+    h.innerHTML = '<span class="ic" style="background:'+t[4]+'">'+esc(t[1])+'</span><div class="tt">'+esc(t[2].charAt(0)+t[2].slice(1).toLowerCase())+'</div><div class="ds">'+esc(t[3])+'</div>';
+    h.addEventListener("click", function(){ showTool(t[0]); });
+    homeGrid.appendChild(h);
+  }
+});
+function showTool(id){
+  document.querySelectorAll(".tool").forEach(function(s){ s.classList.toggle("active", s.id==="tool-"+id); });
+  document.querySelectorAll("#toolNav button").forEach(function(b){ b.classList.toggle("active", b.getAttribute("data-tool")===id); });
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.addEventListener("click", function(e){
+  var g=e.target.closest("[data-goto]"); if(g) showTool(g.getAttribute("data-goto"));
+});
+showTool("home");
+</script>
+
+<script>
+"use strict";
+/* ================= 1. DUTY ================= */
+var dutyEntries = read("vms_duty_v2", []);
+function slotRow(inV, outV){
+  var d=document.createElement("div"); d.className="slotrow";
+  d.innerHTML = '<div class="field"><label>In time</label><input type="time" class="slotIn" value="'+(inV||"")+'"></div>'+
+    '<div class="field"><label>Out time</label><input type="time" class="slotOut" value="'+(outV||"")+'"></div>'+
+    '<button type="button" class="btn red sm">Remove</button>';
+  d.querySelector("button").addEventListener("click", function(){ d.remove(); });
+  return d;
+}
+$("slotList").appendChild(slotRow("06:30",""));
+$("addSlotBtn").addEventListener("click", function(){ $("slotList").appendChild(slotRow("","")); });
+$("dutyDate").value = todayISO();
+$("dutyMonth").value = curMonth();
+
+function dutyDayCalc(e){
+  var gross=0, firstIn=null;
+  (e.slots||[]).forEach(function(s){
+    var i=timeToMin(s.i), o=timeToMin(s.o);
+    if(i==null||o==null) return;
+    var d=o-i; if(d<0) d+=1440;
+    gross+=d; if(firstIn==null||i<firstIn) firstIn=i;
+  });
+  var net = e.off? 0 : Math.max(0, gross - (+e.brk||0));
+  var exp = timeToMin($("dutyExpected").value);
+  var late = (!e.off && firstIn!=null && exp!=null) ? Math.max(0, firstIn-exp) : 0;
+  var stdMin = (+$("dutyStd").value||0)*60;
+  var ot = e.off? 0 : Math.max(0, net - stdMin);
+  return {gross:gross, net:net, late:late, ot:ot};
+}
+function renderDuty(){
+  var m = $("dutyMonth").value || curMonth();
+  var list = dutyEntries.filter(function(e){ return monthOf(e.date)===m; }).sort(function(a,b){ return a.date<b.date?-1:1; });
+  var tb=$("dutyRows"); tb.innerHTML="";
+  var tNet=0,tLate=0,tOT=0,days=0;
+  list.forEach(function(e){
+    var c=dutyDayCalc(e); tNet+=c.net; tLate+=c.late; tOT+=c.ot; if(!e.off) days++;
+    var tr=document.createElement("tr");
+    var slotTxt = e.off? '<span class="chip off">Day Off</span>' : (e.slots||[]).map(function(s){ return esc(s.i||"?")+" – "+esc(s.o||"?"); }).join("<br>");
+    tr.innerHTML = "<td><strong>"+esc(e.date)+"</strong></td><td>"+slotTxt+"</td><td>"+(e.off?"—":(+e.brk||0)+"m")+"</td><td><strong>"+(e.off?"—":fmtHM(c.net))+"</strong></td><td>"+(c.late? c.late+"m":"—")+"</td><td>"+(c.ot? fmtHM(c.ot):"—")+'</td><td><button type="button" class="btn red sm">Delete</button></td>';
+    tr.querySelector("button").addEventListener("click", function(){
+      dutyEntries = dutyEntries.filter(function(x){ return !(x.date===e.date && x.ts===e.ts); });
+      store("vms_duty_v2", dutyEntries); renderDuty();
+    });
+    tb.appendChild(tr);
+  });
+  $("dutyEmpty").style.display = list.length? "none":"block";
+  $("dutyTotalNet").textContent = fmtHM(tNet);
+  $("dutyDays").textContent = days;
+  $("dutyLate").textContent = tLate+"m";
+  $("dutyOT").textContent = fmtHM(tOT);
+  window._dutyTotals = {netMin:tNet, otMin:tOT, days:days, month:m};
+}
+$("addDutyBtn").addEventListener("click", function(){
+  var date=$("dutyDate").value; if(!date){ alertMsg("Pick a date first."); return; }
+  var slots=[];
+  document.querySelectorAll("#slotList .slotrow").forEach(function(r){
+    var i=r.querySelector(".slotIn").value, o=r.querySelector(".slotOut").value;
+    if(i||o) slots.push({i:i,o:o});
+  });
+  var off = $("dutyOff").value==="yes";
+  if(!off && !slots.length){ alertMsg("Add at least one in/out slot, or mark the day as Day Off."); return; }
+  dutyEntries = dutyEntries.filter(function(x){ return x.date!==date; });
+  dutyEntries.push({date:date, slots:slots, brk:+$("dutyBreak").value||0, off:off, ts:Date.now()});
+  store("vms_duty_v2", dutyEntries);
+  $("dutyMonth").value = monthOf(date); renderDuty();
+});
+function alertMsg(m){ var x=$("dutyEmpty"); x.textContent=m; x.style.display="block"; }
+$("dutyMonth").addEventListener("change", renderDuty);
+$("dutyExpected").addEventListener("change", renderDuty);
+$("dutyStd").addEventListener("change", renderDuty);
+$("dutyCsvBtn").addEventListener("click", function(){
+  var m=$("dutyMonth").value||curMonth();
+  var rows=[["Date","Slots","Break (min)","Net (h:mm)","Net hours","Late (min)","Overtime (h:mm)","Day Off"]];
+  dutyEntries.filter(function(e){return monthOf(e.date)===m;}).sort(function(a,b){return a.date<b.date?-1:1;}).forEach(function(e){
+    var c=dutyDayCalc(e);
+    rows.push([e.date, (e.slots||[]).map(function(s){return s.i+"-"+s.o;}).join(" ; "), e.off?0:(+e.brk||0), fmtHM(c.net), (c.net/60).toFixed(2), c.late, fmtHM(c.ot), e.off?"Yes":""]);
+  });
+  var csv=rows.map(function(r){ return r.map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(","); }).join("\r\n");
+  dlBlob(new Blob(["\ufeff"+csv],{type:"text/csv"}), "duty-"+m+".csv");
+});
+$("dutyClearBtn").addEventListener("click", function(){
+  var m=$("dutyMonth").value||curMonth();
+  dutyEntries = dutyEntries.filter(function(e){ return monthOf(e.date)!==m; });
+  store("vms_duty_v2", dutyEntries); renderDuty();
+});
+renderDuty();
+
+/* ================= 2. ROSTER ================= */
+var employees = read("vms_emp_v2", []);
+var shifts = read("vms_shifts_v2", {}); /* key empId|YYYY-MM-DD = D|N|O */
+$("rosterMonth").value = curMonth();
+function empId(e){ return e.name+"|"+(e.role||""); }
+function renderEmps(){
+  var wrap=$("empList"); wrap.innerHTML="";
+  var sel=$("todayEmp"); var prev=sel.value; sel.innerHTML="";
+  employees.forEach(function(e, idx){
+    var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var row=document.createElement("div"); row.className="row"; row.style.marginBottom="6px";
+    row.innerHTML = '<span class="chip">'+esc(e.name)+(e.role? " • "+esc(e.role):"")+'</span><span class="note">Weekly off: '+(e.offDay>=0? days[e.offDay]:"none")+' • Default: '+(e.def==="N"?"Night":"Day")+'</span>';
+    var del=document.createElement("button"); del.type="button"; del.className="btn red sm"; del.textContent="Remove";
+    del.addEventListener("click", function(){ employees.splice(idx,1); store("vms_emp_v2",employees); renderEmps(); renderRoster(); renderToday(); });
+    row.appendChild(del); wrap.appendChild(row);
+    var o=document.createElement("option"); o.value=empId(e); o.textContent=e.name+(e.role? " ("+e.role+")":""); sel.appendChild(o);
+  });
+  if(prev) sel.value=prev;
+  if(!employees.length) wrap.innerHTML='<p class="note">No employees yet — the roster starts empty. Add your first employee above.</p>';
+}
+$("addEmpBtn").addEventListener("click", function(){
+  var n=$("empName").value.trim(); if(!n){ $("empName").focus(); return; }
+  employees.push({name:n, role:$("empRole").value.trim(), offDay:+$("empOff").value, def:$("empShift").value});
+  store("vms_emp_v2",employees); $("empName").value=""; $("empRole").value="";
+  renderEmps(); genRoster(false); renderToday();
+});
+function daysInMonth(mstr){ var p=mstr.split("-"); return new Date(+p[0], +p[1], 0).getDate(); }
+function genRoster(saveMsg){
+  var m=$("rosterMonth").value||curMonth(); var dim=daysInMonth(m);
+  employees.forEach(function(e){
+    for(var d=1; d<=dim; d++){
+      var iso=m+"-"+String(d).padStart(2,"0"); var key=empId(e)+"|"+iso;
+      if(!(key in shifts)){
+        var wd=new Date(iso+"T12:00:00").getDay();
+        shifts[key] = (e.offDay>=0 && wd===e.offDay)? "O" : (e.def||"D");
+      }
+    }
+  });
+  store("vms_shifts_v2", shifts); renderRoster(); renderToday();
+}
+$("genRosterBtn").addEventListener("click", function(){ genRoster(true); });
+function renderRoster(){
+  var m=$("rosterMonth").value||curMonth(); var dim=daysInMonth(m);
+  var head=$("rosterHead"), body=$("rosterBody"); head.innerHTML=""; body.innerHTML="";
+  var tIs=todayISO();
+  var hr=document.createElement("tr"); hr.innerHTML="<th>Employee</th>";
+  for(var d=1; d<=dim; d++){ var th=document.createElement("th"); th.textContent=d; if(m+"-"+String(d).padStart(2,"0")===tIs) th.style.color="var(--amber)"; hr.appendChild(th); }
+  head.appendChild(hr);
+  employees.forEach(function(e){
+    var tr=document.createElement("tr");
+    var td0=document.createElement("td"); td0.innerHTML="<strong>"+esc(e.name)+"</strong>"+(e.role? '<br><span class="note">'+esc(e.role)+"</span>":""); tr.appendChild(td0);
+    for(var d=1; d<=dim; d++){
+      (function(day){
+        var iso=m+"-"+String(day).padStart(2,"0"); var key=empId(e)+"|"+iso;
+        var v=shifts[key]||"D";
+        var td=document.createElement("td");
+        var cell=document.createElement("div"); cell.className="roster-cell "+v+(iso===tIs?" today":""); cell.textContent=v; cell.title=e.name+" • "+iso+" — click to change";
+        cell.addEventListener("click", function(){
+          var order=["D","N","O"]; var nx=order[(order.indexOf(shifts[key]||"D")+1)%3];
+          shifts[key]=nx; store("vms_shifts_v2",shifts); renderRoster(); renderToday();
+        });
+        td.appendChild(cell); tr.appendChild(td);
+      })(d);
+    }
+    body.appendChild(tr);
+  });
+}
+function shiftLabel(v){ return v==="D"?"Day shift":v==="N"?"Night shift":v==="O"?"Off day":"—"; }
+function renderToday(){
+  var t=todayISO(); var sel=$("todayEmp");
+  var all=$("todayAll"); all.innerHTML="";
+  if(!employees.length){ $("todayShift").textContent="—"; return; }
+  employees.forEach(function(e){
+    var v=shifts[empId(e)+"|"+t];
+    var chipCls = v==="D"?"day":v==="N"?"night":"off";
+    var s=document.createElement("span"); s.style.margin="0 6px 6px 0"; s.style.display="inline-block";
+    s.innerHTML='<span class="chip '+chipCls+'">'+esc(e.name)+": "+(v? shiftLabel(v):"no roster")+"</span>";
+    all.appendChild(s);
+  });
+  var me = employees.find(function(e){ return empId(e)===sel.value; }) || employees[0];
+  if(me){ sel.value=empId(me); var v2=shifts[empId(me)+"|"+t];
+    $("todayShift").textContent = v2? shiftLabel(v2) : "No roster for today";
+    $("todayShiftSub").textContent = me.name+" • "+t+(v2? "" : " — press “Generate / refresh roster” first.");
+  }
+}
+$("todayEmp").addEventListener("change", renderToday);
+$("rosterMonth").addEventListener("change", function(){ renderRoster(); });
+$("rosterCsvBtn").addEventListener("click", function(){
+  var m=$("rosterMonth").value||curMonth(); var dim=daysInMonth(m);
+  var rows=[["Employee","Role"].concat(Array.from({length:dim},function(_,i){return i+1;}))];
+  employees.forEach(function(e){ var r=[e.name,e.role||""]; for(var d=1;d<=dim;d++){ r.push(shifts[empId(e)+"|"+m+"-"+String(d).padStart(2,"0")]||""); } rows.push(r); });
+  var csv=rows.map(function(r){ return r.map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(","); }).join("\r\n");
+  dlBlob(new Blob(["\ufeff"+csv],{type:"text/csv"}), "roster-"+m+".csv");
+});
+renderEmps(); renderRoster(); renderToday();
+
+/* ================= 3. SALARY ================= */
+function salCalc(){
+  var rate=+$("salRate").value||0, hrs=+$("salHours").value||0, ot=+$("salOT").value||0, otx=+$("salOTx").value||1.5, wh=+$("salWeekH").value||0;
+  var regPay=rate*hrs, otPay=rate*ot*otx, total=regPay+otPay;
+  $("salRegPay").textContent=fmtMoney(regPay);
+  $("salOTPay").textContent=fmtMoney(otPay);
+  $("salMonthly").textContent=fmtMoney(total);
+  $("salWeekly").textContent=fmtMoney(rate*wh);
+  $("salNote").innerHTML = "At <strong>"+fmtMoney(rate)+"/hour</strong>: "+hrs+" regular hours = "+fmtMoney(regPay)+(ot? ", plus "+ot+" OT hours at ×"+otx+" = "+fmtMoney(otPay):"")+". Weekly figure uses "+wh+" hours/week at the plain rate.";
+}
+$("salCalcBtn").addEventListener("click", salCalc);
+$("salFromDutyBtn").addEventListener("click", function(){
+  renderDuty(); var t=window._dutyTotals||{netMin:0,otMin:0};
+  var otH=t.otMin/60, regH=Math.max(0,(t.netMin-t.otMin)/60);
+  $("salHours").value=regH.toFixed(2); $("salOT").value=otH.toFixed(2); salCalc();
+  $("salNote").innerHTML = "Filled from your Duty log for "+esc(t.month||"")+" — net "+fmtHM(t.netMin)+" total (regular "+regH.toFixed(2)+"h + overtime "+otH.toFixed(2)+"h). Now press Calculate after setting your hourly rate.";
+});
+</script>
+
+<script>
+"use strict";
+/* ================= 4. OCR ================= */
+$("ocrBtn").addEventListener("click", function(){
+  var f=$("ocrFile").files[0]; var msg=$("ocrMsg");
+  if(!f){ msg.innerHTML='<div class="err">Choose an image first.</div>'; return; }
+  if(typeof Tesseract==="undefined"){ msg.innerHTML='<div class="err">The OCR engine (Tesseract.js) could not be loaded — check your internet connection and reload the page.</div>'; return; }
+  $("ocrProgWrap").style.display="block"; msg.innerHTML="";
+  Tesseract.recognize(f, $("ocrLang").value, { logger: function(m){
+    if(m.status==="recognizing text"){ $("ocrProg").value=m.progress; $("ocrStatus").textContent="Recognizing… "+Math.round(m.progress*100)+"%"; }
+    else $("ocrStatus").textContent=m.status+"…";
+  }}).then(function(res){
+    $("ocrOut").value=res.data.text||"";
+    $("ocrStatus").textContent="Done.";
+    if(!res.data.text.trim()) msg.innerHTML='<div class="warn">No text was found in that image. Try a sharper, straight-on photo with good light.</div>';
+  }).catch(function(err){
+    msg.innerHTML='<div class="err">OCR failed: '+esc(err && err.message? err.message: err)+'</div>';
+  });
+});
+$("ocrCopyBtn").addEventListener("click", function(){ if(navigator.clipboard) navigator.clipboard.writeText($("ocrOut").value); });
+
+/* ================= 5. QR SCANNER ================= */
+function showQrResult(text){
+  $("qrOut").value=text;
+  var wrap=$("qrParsed"); wrap.innerHTML=""; $("qrLinkWrap").innerHTML="";
+  if(/^https?:\/\//i.test(text)){
+    wrap.innerHTML='<div class="okbox">This QR is a link: <a href="'+esc(text)+'" target="_blank" rel="noopener">'+esc(text)+'</a></div>';
+  } else if(/^WIFI:/i.test(text)){
+    var ssid=(text.match(/S:((?:\\.|[^;\\])*)/)||[])[1]||"", pw=(text.match(/P:((?:\\.|[^;\\])*)/)||[])[1]||"", sec=(text.match(/T:([^;]*)/)||[])[1]||"";
+    wrap.innerHTML='<div class="okbox"><strong>Wi-Fi QR</strong><br>Network (SSID): <strong>'+esc(ssid)+'</strong><br>Password: <strong>'+esc(pw)+'</strong><br>Security: '+esc(sec||"—")+'</div>';
+  } else {
+    wrap.innerHTML='<div class="okbox">Plain text QR decoded successfully.</div>';
+  }
+}
+function decodeQrFromImage(img){
+  var c=$("qrCanvas"); var max=1200; var sc=Math.min(1, max/Math.max(img.naturalWidth||img.width, img.naturalHeight||img.height));
+  c.width=(img.naturalWidth||img.width)*sc; c.height=(img.naturalHeight||img.height)*sc;
+  var ctx=c.getContext("2d"); ctx.drawImage(img,0,0,c.width,c.height);
+  var data=ctx.getImageData(0,0,c.width,c.height);
+  if(typeof jsQR==="undefined"){ $("qrParsed").innerHTML='<div class="err">The QR library (jsQR) could not be loaded — check your connection and reload.</div>'; return; }
+  var code=jsQR(data.data, data.width, data.height);
+  if(code) showQrResult(code.data);
+  else $("qrParsed").innerHTML='<div class="warn">No QR code found in that image. Try a clearer, closer photo of the code.</div>';
+}
+$("qrFile").addEventListener("change", function(){
+  var f=this.files[0]; if(!f) return;
+  var img=new Image(); img.onload=function(){ decodeQrFromImage(img); URL.revokeObjectURL(img.src); };
+  img.src=URL.createObjectURL(f);
+});
+var qrStream=null, qrAnim=null;
+$("qrCamStart").addEventListener("click", function(){
+  if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){ $("qrParsed").innerHTML='<div class="err">Camera is not available in this browser/context.</div>'; return; }
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}}).then(function(stream){
+    qrStream=stream; var v=$("qrVideo"); v.srcObject=stream; v.style.display="block"; v.play();
+    var tick=function(){
+      if(!qrStream) return;
+      if(v.readyState===v.HAVE_ENOUGH_DATA){
+        var c=$("qrCanvas"); c.width=v.videoWidth; c.height=v.videoHeight;
+        var ctx=c.getContext("2d"); ctx.drawImage(v,0,0,c.width,c.height);
+        try{ var d=ctx.getImageData(0,0,c.width,c.height); var code=(typeof jsQR!=="undefined")? jsQR(d.data,d.width,d.height):null;
+          if(code){ showQrResult(code.data); stopQrCam(); return; } }catch(e){}
+      }
+      qrAnim=requestAnimationFrame(tick);
+    };
+    tick();
+  }).catch(function(err){ $("qrParsed").innerHTML='<div class="err">Camera permission was denied or no camera was found.</div>'; });
+});
+function stopQrCam(){ if(qrAnim) cancelAnimationFrame(qrAnim); if(qrStream){ qrStream.getTracks().forEach(function(t){t.stop();}); qrStream=null; } $("qrVideo").style.display="none"; }
+$("qrCamStop").addEventListener("click", stopQrCam);
+$("qrCopyBtn").addEventListener("click", function(){ if(navigator.clipboard) navigator.clipboard.writeText($("qrOut").value); });
+
+/* ================= 6. PDF ================= */
+document.querySelectorAll("#pdfTabs button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#pdfTabs button").forEach(function(x){x.classList.remove("active");});
+    document.querySelectorAll("#tool-pdf .tabpane").forEach(function(x){x.classList.remove("active");});
+    b.classList.add("active"); $(b.getAttribute("data-pane")).classList.add("active");
+  });
+});
+function pdfLibOk(el){ if(typeof PDFLib==="undefined"){ el.innerHTML='<div class="err">The PDF engine (pdf-lib) could not be loaded — check your connection and reload.</div>'; return false; } return true; }
+$("mergeBtn").addEventListener("click", function(){
+  var files=$("mergeFiles").files, msg=$("mergeMsg");
+  if(!pdfLibOk(msg)) return;
+  if(files.length<2){ msg.innerHTML='<span class="note">Pick at least 2 PDF files.</span>'; return; }
+  msg.textContent="Merging…";
+  (async function(){
+    try{
+      var out=await PDFLib.PDFDocument.create();
+      for(var i=0;i<files.length;i++){
+        var src=await PDFLib.PDFDocument.load(await files[i].arrayBuffer());
+        var pages=await out.copyPages(src, src.getPageIndices());
+        pages.forEach(function(p){ out.addPage(p); });
+      }
+      var bytes=await out.save();
+      dlBlob(new Blob([bytes],{type:"application/pdf"}), "merged.pdf");
+      msg.innerHTML='<span class="note">Done — merged.pdf downloaded ('+files.length+' files).</span>';
+    }catch(e){ msg.innerHTML='<div class="err">Merge failed: '+esc(e.message||e)+'</div>'; }
+  })();
+});
+$("splitBtn").addEventListener("click", function(){
+  var f=$("splitFile").files[0], msg=$("splitMsg"), range=$("splitRange").value.trim();
+  if(!pdfLibOk(msg)) return;
+  if(!f){ msg.innerHTML='<div class="err">Choose a PDF first.</div>'; return; }
+  if(!range){ msg.innerHTML='<div class="err">Type the pages to extract, e.g. 1-3,5</div>'; return; }
+  (async function(){
+    try{
+      var src=await PDFLib.PDFDocument.load(await f.arrayBuffer());
+      var total=src.getPageCount(); var idx=[];
+      range.split(",").forEach(function(part){
+        var m=part.trim().match(/^(\d+)\s*-\s*(\d+)$/);
+        if(m){ for(var p=+m[1]; p<=+m[2]; p++) idx.push(p-1); }
+        else if(/^\d+$/.test(part.trim())) idx.push(+part.trim()-1);
+      });
+      idx=idx.filter(function(i){ return i>=0 && i<total; });
+      if(!idx.length){ msg.innerHTML='<div class="err">No valid pages in that range (this PDF has '+total+' pages).</div>'; return; }
+      var out=await PDFLib.PDFDocument.create();
+      var pages=await out.copyPages(src, idx); pages.forEach(function(p){ out.addPage(p); });
+      dlBlob(new Blob([await out.save()],{type:"application/pdf"}), "extracted-pages.pdf");
+      msg.innerHTML='<div class="okbox">Done — extracted '+idx.length+' page(s) into extracted-pages.pdf.</div>';
+    }catch(e){ msg.innerHTML='<div class="err">Split failed: '+esc(e.message||e)+'</div>'; }
+  })();
+});
+$("compBtn").addEventListener("click", function(){
+  var f=$("compFile").files[0], msg=$("compMsg");
+  if(!pdfLibOk(msg)) return;
+  if(!f){ msg.innerHTML='<div class="err">Choose a PDF first.</div>'; return; }
+  (async function(){
+    try{
+      var before=f.size;
+      var doc=await PDFLib.PDFDocument.load(await f.arrayBuffer(), {ignoreEncryption:true});
+      var bytes=await doc.save({useObjectStreams:true});
+      dlBlob(new Blob([bytes],{type:"application/pdf"}), "compressed.pdf");
+      var pct=before? Math.round((1-bytes.length/before)*100):0;
+      msg.innerHTML='<div class="okbox">Done — compressed.pdf downloaded.<br>Before: '+(before/1024).toFixed(1)+' KB → After: '+(bytes.length/1024).toFixed(1)+' KB ('+(pct>=0? pct+"% smaller" : Math.abs(pct)+"% larger — this file was already tightly compressed")+').</div>';
+    }catch(e){ msg.innerHTML='<div class="err">Compress failed: '+esc(e.message||e)+'</div>'; }
+  })();
+});
+$("p2jBtn").addEventListener("click", function(){
+  var f=$("p2jFile").files[0], msg=$("p2jMsg"), out=$("p2jOut");
+  if(!f){ msg.innerHTML='<div class="err">Choose a PDF first.</div>'; return; }
+  if(typeof pdfjsLib==="undefined"){ msg.innerHTML='<div class="err">The PDF viewer engine (PDF.js) could not be loaded — check your connection and reload.</div>'; return; }
+  pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+  out.innerHTML=""; msg.textContent="Rendering…";
+  (async function(){
+    try{
+      var pdf=await pdfjsLib.getDocument({data: await f.arrayBuffer()}).promise;
+      var scale=+$("p2jScale").value||1.5;
+      for(var p=1;p<=pdf.numPages;p++){
+        var page=await pdf.getPage(p); var vp=page.getViewport({scale:scale});
+        var cv=document.createElement("canvas"); cv.width=vp.width; cv.height=vp.height;
+        await page.render({canvasContext: cv.getContext("2d"), viewport: vp}).promise;
+        var url=cv.toDataURL("image/jpeg",0.92);
+        var div=document.createElement("div"); div.className="out";
+        div.innerHTML="<strong>Page "+p+"</strong><br>";
+        var a=document.createElement("a"); a.href=url; a.download="page-"+p+".jpg"; a.textContent="⬇ Download page "+p+" as JPG";
+        div.appendChild(a);
+        var im=document.createElement("img"); im.src=url; im.alt="Page "+p+" of the PDF rendered as JPG"; im.style.cssText="width:100%;margin-top:8px;border-radius:8px";
+        div.appendChild(im); out.appendChild(div);
+      }
+      msg.innerHTML='<div class="okbox">Done — '+pdf.numPages+' page(s) rendered below.</div>';
+    }catch(e){ msg.innerHTML='<div class="err">Conversion failed: '+esc(e.message||e)+'</div>'; }
+  })();
+});
+$("j2pBtn").addEventListener("click", function(){
+  var files=$("j2pFiles").files, msg=$("j2pMsg");
+  if(!pdfLibOk(msg)) return;
+  if(!files.length){ msg.innerHTML='<span class="note">Choose at least one image.</span>'; return; }
+  (async function(){
+    try{
+      var doc=await PDFLib.PDFDocument.create();
+      for(var i=0;i<files.length;i++){
+        var buf=await files[i].arrayBuffer();
+        var img = files[i].type==="image/png"? await doc.embedPng(buf) : await doc.embedJpg(buf);
+        var page=doc.addPage([img.width, img.height]);
+        page.drawImage(img,{x:0,y:0,width:img.width,height:img.height});
+      }
+      dlBlob(new Blob([await doc.save()],{type:"application/pdf"}), "images.pdf");
+      msg.innerHTML='<span class="note">Done — images.pdf downloaded ('+files.length+' image(s)).</span>';
+    }catch(e){ msg.innerHTML='<div class="err">Failed: '+esc(e.message||e)+'</div>'; }
+  })();
+});
+</script>
+
+<script>
+"use strict";
+/* ================= 7/8. VIDEO (FFmpeg.wasm) ================= */
+var ffmpegInst=null;
+function loadFFmpeg(statusEl, progEl){
+  if(typeof FFmpeg==="undefined" || !FFmpeg.createFFmpeg){
+    return Promise.reject(new Error("The FFmpeg engine script could not be loaded from the CDN. Check your internet connection and reload the page."));
+  }
+  if(ffmpegInst) return Promise.resolve(ffmpegInst);
+  statusEl.textContent="Loading video engine (first time can take a while on slow connections)…";
+  var ff=FFmpeg.createFFmpeg({ log:false,
+    corePath:"https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js",
+    progress: function(p){ if(progEl && p.ratio>=0) progEl.value=p.ratio; }
+  });
+  return ff.load().then(function(){ ffmpegInst=ff; return ff; }).catch(function(e){
+    throw new Error("The video engine could not start in this browser. This usually means SharedArrayBuffer is blocked — which happens on plain GitHub Pages hosting without special headers, and in some browsers. The file was not converted. All other tools on this page still work. ("+(e.message||e)+")");
+  });
+}
+function runVideoJob(file, args, outName, statusEl, progWrap, progEl, msgEl, outEl, doneText){
+  if(!file){ msgEl.innerHTML='<div class="err">Choose a video file first.</div>'; return; }
+  msgEl.innerHTML=""; outEl.innerHTML=""; progWrap.style.display="block"; progEl.value=0;
+  loadFFmpeg(statusEl, progEl).then(function(ff){
+    statusEl.textContent="Processing… keep this tab open.";
+    var ext=(file.name.split(".").pop()||"mp4").toLowerCase();
+    var inName="input."+ext;
+    return ff.FS("writeFile", inName, FFmpeg.fetchFile(file)).then(function(){
+      return ff.run.apply(null, ["-i", inName].concat(args).concat([outName]));
+    }).then(function(){
+      var data=ff.FS("readFile", outName);
+      var blob=new Blob([data.buffer],{type:"video/mp4"});
+      var url=URL.createObjectURL(blob);
+      outEl.innerHTML='<div class="okbox">'+doneText+'<br>New size: '+(blob.size/1048576).toFixed(2)+' MB (original: '+(file.size/1048576).toFixed(2)+' MB)<br><a class="btn green sm" style="margin-top:8px" href="'+url+'" download="'+outName+'">⬇ Download '+outName+'</a></div><video controls src="'+url+'" style="margin-top:10px;width:100%"></video>';
+      statusEl.textContent="Done.";
+      try{ ff.FS("unlink", inName); ff.FS("unlink", outName); }catch(e){}
+    });
+  }).catch(function(e){
+    msgEl.innerHTML='<div class="err">'+esc(e.message||String(e))+'</div>'; statusEl.textContent="";
+  }).finally(function(){ progWrap.style.display="none"; });
+}
+$("vcBtn").addEventListener("click", function(){
+  runVideoJob($("vcFile").files[0], ["-c:v","libx264","-c:a","aac","-movflags","+faststart"], "converted.mp4",
+    $("vcStatus"), $("vcProgWrap"), $("vcProg"), $("vcMsg"), $("vcOut"), "Converted to MP4 successfully.");
+});
+$("vpBtn").addEventListener("click", function(){
+  var args=["-c:v","libx264","-crf",$("vpCrf").value,"-preset","medium","-c:a","aac","-b:a","128k","-movflags","+faststart"];
+  var vf=[];
+  var res=+$("vpRes").value; if(res>0) vf.push("scale=-2:"+res);
+  var fps=+$("vpFps").value; if(fps>0) vf.push("fps="+fps);
+  if(vf.length) args=args.concat(["-vf", vf.join(",")]);
+  runVideoJob($("vpFile").files[0], args, "compressed.mp4",
+    $("vpStatus"), $("vpProgWrap"), $("vpProg"), $("vpMsg"), $("vpOut"), "Video compressed successfully.");
+});
+
+/* file size converter */
+function fsConvert(){
+  var v=+$("fsVal").value||0, from=$("fsFrom").value;
+  var mult={B:1, KB:1024, MB:1048576, GB:1073741824, TB:1099511627776};
+  var bytes=v*mult[from];
+  function f(u){ var n=bytes/mult[u]; return (n>=100? n.toFixed(1): n>=1? n.toFixed(3): n.toPrecision(3))+" "+u; }
+  $("fsOut").innerHTML = "<strong>"+v+" "+from+"</strong> = "+f("B").replace(" B"," bytes")+" • "+f("KB")+" • "+f("MB")+" • "+f("GB")+" • "+f("TB");
+}
+$("fsBtn").addEventListener("click", fsConvert); fsConvert();
+
+/* ================= 9. TIMESTAMP ================= */
+$("tsBtn").addEventListener("click", function(){
+  var s=$("tsStart").value, e=$("tsEnd").value;
+  if(!s||!e){ $("tsOut").innerHTML="Pick both a start and an end time."; return; }
+  var d1=new Date(s), d2=new Date(e); var diff=d2-d1; var neg=diff<0; diff=Math.abs(diff);
+  var sec=Math.floor(diff/1000), h=Math.floor(sec/3600), m=Math.floor((sec%3600)/60), ss=sec%60;
+  $("tsOut").innerHTML=(neg? "⚠️ End is <strong>before</strong> start. Absolute difference: ":"")+
+    "Duration: <strong>"+h+"h "+String(m).padStart(2,"0")+"m "+String(ss).padStart(2,"0")+"s</strong>"+
+    " &nbsp;•&nbsp; Total: <strong>"+(Math.floor(diff/1000))+" seconds</strong> / <strong>"+(diff/60000).toFixed(2)+" minutes</strong>"+
+    "<br>As a footage timestamp span: <span class='mono'>"+String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+String(ss).padStart(2,"0")+"</span>";
+});
+$("ampmBtn").addEventListener("click", function(){
+  var v=$("ampmIn").value.trim();
+  var m=v.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)$/i);
+  if(!m){ $("ampmOut").innerHTML="Type a time like <strong>3:25 PM</strong> or <strong>11:05:30 AM</strong>."; return; }
+  var h=+m[1]%12; if(/pm/i.test(m[4])) h+=12;
+  $("ampmOut").innerHTML="<strong>"+esc(v.toUpperCase())+"</strong> in 24-hour format = <strong class='mono'>"+String(h).padStart(2,"0")+":"+m[2]+(m[3]? ":"+m[3]:"")+"</strong>";
+});
+$("incBtn").addEventListener("click", function(){
+  var t=$("incTime").value; if(!t){ $("incOut").innerHTML="Pick the time shown on the camera/DVR."; return; }
+  var off=+$("incOff").value||0; var mins=timeToMin(t);
+  var real = $("incDir").value==="fast"? mins-off : mins+off;
+  real=((real%1440)+1440)%1440;
+  var h=Math.floor(real/60), m=real%60, s=t.split(":")[2]||"00";
+  $("incOut").innerHTML="Real incident time: <strong class='mono'>"+String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")+":"+s+"</strong> (camera showed "+esc(t)+", clock "+off+" min "+($("incDir").value==="fast"?"fast":"slow")+").";
+});
+
+/* ================= 10. VIDEO SPEED ================= */
+var vsURL=null;
+$("vsFile").addEventListener("change", function(){
+  var f=this.files[0]; if(!f) return;
+  if(vsURL) URL.revokeObjectURL(vsURL);
+  vsURL=URL.createObjectURL(f); var p=$("vsPlayer"); p.src=vsURL; p.style.display="block";
+  $("vsInfo").textContent=f.name+" • "+(f.size/1048576).toFixed(2)+" MB";
+});
+document.querySelectorAll("#vsSeg button[data-rate]").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#vsSeg button").forEach(function(x){x.classList.remove("active");});
+    b.classList.add("active");
+    $("vsPlayer").playbackRate=+b.getAttribute("data-rate");
+    $("vsInfo").textContent="Playback speed: "+b.getAttribute("data-rate")+"×";
+  });
+});
+$("vsBack").addEventListener("click", function(){ $("vsPlayer").currentTime=Math.max(0,$("vsPlayer").currentTime-5); });
+$("vsFwd").addEventListener("click", function(){ $("vsPlayer").currentTime+=5; });
+$("vsFrame").addEventListener("click", function(){ var p=$("vsPlayer"); p.pause(); p.currentTime+=1/30; });
+</script>
+
+<script>
+"use strict";
+/* ================= 11. SPEED TEST ================= */
+$("speedBtn").addEventListener("click", function(){
+  var st=$("speedStatus"); var btn=$("speedBtn"); btn.disabled=true;
+  $("spDown").textContent="…"; $("spUp").textContent="…"; $("spPing").textContent="…"; $("spJitter").textContent="…";
+  var pings=[];
+  function pingOnce(){
+    var t0=performance.now();
+    return fetch("https://speed.cloudflare.com/cdn-cgi/trace",{cache:"no-store"}).then(function(r){ return r.text(); }).then(function(txt){
+      pings.push(performance.now()-t0); return txt;
+    });
+  }
+  var traceTxt="";
+  pingOnce().then(function(t){ traceTxt=t; return pingOnce(); }).then(function(){ return pingOnce(); }).then(function(){ return pingOnce(); }).then(function(){
+    var sorted=pings.slice().sort(function(a,b){return a-b;});
+    var ping=sorted[Math.floor(sorted.length/2)];
+    var jit=0; for(var i=1;i<pings.length;i++) jit+=Math.abs(pings[i]-pings[i-1]); jit=pings.length>1? jit/(pings.length-1):0;
+    $("spPing").textContent=Math.round(ping); $("spJitter").textContent=Math.round(jit);
+    var loc=(traceTxt.match(/loc=([^\n]+)/)||[])[1]||"", colo=(traceTxt.match(/colo=([^\n]+)/)||[])[1]||"";
+    $("speedServer").innerHTML="Server: <strong>Cloudflare</strong>"+(colo? " • Edge location code: <strong>"+esc(colo)+"</strong>":"")+(loc? " • Your connection country: <strong>"+esc(loc)+"</strong>":"");
+    st.textContent="Ping done. Measuring download…";
+    var bytes=15*1024*1024, t0=performance.now();
+    return fetch("https://speed.cloudflare.com/__down?bytes="+bytes,{cache:"no-store"}).then(function(r){ return r.arrayBuffer(); }).then(function(buf){
+      var secs=(performance.now()-t0)/1000; var mbps=(buf.byteLength*8/secs)/1e6;
+      $("spDown").textContent=mbps.toFixed(1); st.textContent="Download done. Measuring upload…";
+      var upBytes=5*1024*1024; var data=new Uint8Array(upBytes); 
+      for(var i=0;i<upBytes;i+=65536){ var chunk=crypto.getRandomValues(new Uint8Array(Math.min(65536,upBytes-i))); data.set(chunk,i); }
+      var t1=performance.now();
+      return fetch("https://speed.cloudflare.com/__up",{method:"POST",body:data}).then(function(){
+        var s2=(performance.now()-t1)/1000; var up=(upBytes*8/s2)/1e6;
+        $("spUp").textContent=up.toFixed(1); st.textContent="Test complete ✓ — measured live just now on this connection.";
+      });
+    });
+  }).catch(function(e){
+    st.textContent="Speed test could not finish — check the connection and try again. ("+(e.message||e)+")";
+  }).finally(function(){ btn.disabled=false; });
+});
+
+/* ================= 12. IP CHECKER ================= */
+$("ipBtn").addEventListener("click", function(){
+  $("ipStatus").textContent="Looking up…"; $("ipMsg").innerHTML="";
+  fetch("https://ipapi.co/json/").then(function(r){ if(!r.ok) throw new Error("lookup service returned "+r.status); return r.json(); }).then(function(d){
+    $("ipStatus").textContent="";
+    var rows=[
+      ["Public IP", d.ip||"—"], ["IP version", d.version||"—"],
+      ["ISP / Organization", d.org||"—"], ["ASN", d.asn||"—"],
+      ["City", d.city||"—"], ["Region", d.region||"—"], ["Country", (d.country_name||"—")+(d.country_code? " ("+d.country_code+")":"")],
+      ["Postal code", d.postal||"—"], ["Timezone", d.timezone||"—"],
+      ["Approx. location", (d.latitude!=null&&d.longitude!=null)? d.latitude+", "+d.longitude+" (city-level, approximate)":"—"]
+    ];
+    $("ipOut").innerHTML=rows.map(function(r){ return "<dt>"+esc(r[0])+"</dt><dd>"+esc(r[1])+"</dd>"; }).join("");
+  }).catch(function(e){
+    $("ipStatus").textContent="";
+    $("ipMsg").innerHTML='<div class="err">The IP lookup failed ('+esc(e.message||e)+'). An ad-blocker or the network may be blocking ipapi.co — try again, or check at a site like whatismyipaddress.com.</div>';
+  });
+});
+
+/* ================= 13. NETWORK DIAGNOSTICS ================= */
+$("ndRunBtn").addEventListener("click", function(){
+  var dom=$("ndDomain").value.trim().replace(/^https?:\/\//,"").replace(/\/.*$/,"");
+  var out=$("ndOut");
+  if(!dom){ out.textContent="Type a domain first, e.g. google.com"; return; }
+  out.textContent="Running checks for "+dom+" …";
+  var lines=[];
+  function dns(type){
+    return fetch("https://cloudflare-dns.com/dns-query?name="+encodeURIComponent(dom)+"&type="+type,{headers:{"Accept":"application/dns-json"}})
+      .then(function(r){ return r.json(); })
+      .then(function(j){
+        var ans=(j.Answer||[]).map(function(a){ return a.data; });
+        lines.push(type+" records: "+(ans.length? ans.join("  •  "):"none found"));
+      }).catch(function(){ lines.push(type+" records: lookup failed"); });
+  }
+  var t0=performance.now();
+  var resp=fetch("https://"+dom,{mode:"no-cors",cache:"no-store"}).then(function(){
+    lines.push("Website response: reachable — response in "+Math.round(performance.now()-t0)+" ms (browser ping, includes DNS + connection + first byte path)");
+  }).catch(function(){ lines.push("Website response: could not reach https://"+dom+" from this browser"); });
+  var pings2=[];
+  function bp(){ var s=performance.now(); return fetch("https://"+dom,{mode:"no-cors",cache:"no-store"}).then(function(){ pings2.push(Math.round(performance.now()-s)); }).catch(function(){ pings2.push(null); }); }
+  Promise.all([dns("A"),dns("AAAA"),dns("CNAME"),dns("MX")]).then(function(){ return resp; })
+    .then(function(){ return bp(); }).then(function(){ return bp(); }).then(function(){ return bp(); })
+    .then(function(){
+      var good=pings2.filter(function(x){return x!=null;});
+      if(good.length) lines.push("Ping test (HTTP timing ×3): "+good.join(" ms, ")+" ms — average "+Math.round(good.reduce(function(a,b){return a+b;},0)/good.length)+" ms. Note: browsers measure HTTP round-trips, not ICMP ping, so this runs slightly higher than a terminal ping.");
+      out.textContent="Results for "+dom+":\n• "+lines.join("\n• ");
+    });
+});
+$("niBtn").addEventListener("click", function(){
+  var rows=[["Connection status", navigator.onLine? "Online":"Offline"]];
+  var c=navigator.connection||{};
+  if(c.effectiveType) rows.push(["Connection type (browser estimate)", c.effectiveType+(c.type? " / "+c.type:"")]);
+  if(c.downlink!=null) rows.push(["Estimated downlink", c.downlink+" Mbps (browser estimate)"]);
+  if(c.rtt!=null) rows.push(["Estimated round-trip", c.rtt+" ms"]);
+  rows.push(["Browser", navigator.userAgent]);
+  $("niOut").innerHTML=rows.map(function(r){ return "<dt>"+esc(r[0])+"</dt><dd>"+esc(r[1])+"</dd>"; }).join("");
+  /* local IP via WebRTC */
+  try{
+    var pc=new RTCPeerConnection({iceServers:[]});
+    pc.createDataChannel("");
+    pc.onicecandidate=function(ev){
+      if(ev.candidate){
+        var m=/([0-9]{1,3}(\.[0-9]{1,3}){3})/.exec(ev.candidate.candidate);
+        if(m){ rows.push(["Local IP (WebRTC)", m[1]+" — this is your private LAN address"]); $("niOut").innerHTML=rows.map(function(r){ return "<dt>"+esc(r[0])+"</dt><dd>"+esc(r[1])+"</dd>"; }).join(""); pc.close(); }
+      }
+    };
+    pc.createOffer().then(function(o){ pc.setLocalDescription(o); });
+  }catch(e){ /* WebRTC unavailable */ }
+});
+
+/* ================= 14. DATE CALC ================= */
+function prettyDate(d){ return d.toLocaleDateString("en-GB",{weekday:"short", day:"numeric", month:"short", year:"numeric"}); }
+$("dcBtn").addEventListener("click", function(){
+  var a=$("dcFrom").value, b=$("dcTo").value;
+  if(!a||!b){ $("dcOut").innerHTML="Pick both dates."; return; }
+  var d1=new Date(a+"T12:00:00"), d2=new Date(b+"T12:00:00");
+  var diff=Math.round((d2-d1)/86400000); var abs=Math.abs(diff);
+  var y=Math.floor(abs/365), rem=abs%365, mo=Math.floor(rem/30), dd=rem%30;
+  $("dcOut").innerHTML="<strong>"+abs+" days</strong> "+(diff<0?"(second date is earlier)":"")+"<br>That's about <strong>"+(abs/7).toFixed(1)+" weeks</strong>, or roughly <strong>"+y+"y "+mo+"m "+dd+"d</strong>.<br><span class='note'>"+prettyDate(d1)+" → "+prettyDate(d2)+" • Inclusive count (both days counted): "+(abs+1)+" days</span>";
+});
+$("dcAddBtn").addEventListener("click", function(){
+  var a=$("dcBase").value; if(!a){ $("dcAddOut").innerHTML="Pick a start date."; return; }
+  var d=new Date(a+"T12:00:00"); d.setDate(d.getDate()+(+$("dcDays").value||0));
+  $("dcAddOut").innerHTML="Result: <strong>"+prettyDate(d)+"</strong> ("+d.toISOString().slice(0,10)+")";
+});
+
+/* ================= 15. TIME ZONES ================= */
+var ZONES=[["Dhaka, Bangladesh","Asia/Dhaka"],["Dublin, Ireland","Europe/Dublin"],["New York, USA (ET)","America/New_York"],["Chicago, USA (CT)","America/Chicago"],["Denver, USA (MT)","America/Denver"],["Los Angeles, USA (PT)","America/Los_Angeles"]];
+function tickClocks(){
+  var now=new Date();
+  function f(tz){ return new Intl.DateTimeFormat("en-GB",{timeZone:tz,hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true,weekday:"short",day:"numeric",month:"short"}).format(now); }
+  $("clkDhaka").textContent=f("Asia/Dhaka"); $("clkDublin").textContent=f("Europe/Dublin");
+  $("clkNY").textContent=f("America/New_York"); $("clkLA").textContent=f("America/Los_Angeles");
+  $("clockLine").textContent="🕐 Dhaka "+f("Asia/Dhaka")+"  •  Dublin "+f("Europe/Dublin")+"  •  New York "+f("America/New_York");
+}
+tickClocks(); setInterval(tickClocks,1000);
+function zonedToUTC(y,mo,d,h,mi,tz){
+  var guess=Date.UTC(y,mo,d,h,mi,0);
+  var dtf=new Intl.DateTimeFormat("en-US",{timeZone:tz,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"});
+  function offset(ms){ var parts={}; dtf.formatToParts(new Date(ms)).forEach(function(p){ parts[p.type]=p.value; });
+    var asUTC=Date.UTC(+parts.year, +parts.month-1, +parts.day, +parts.hour, +parts.minute, +parts.second); return asUTC-ms; }
+  var off1=offset(guess); var utc=guess-off1; var off2=offset(utc); if(off2!==off1) utc=guess-off2;
+  return new Date(utc);
+}
+$("tzBtn").addEventListener("click", function(){
+  var v=$("tzIn").value; if(!v){ $("tzOut").innerHTML="Pick a date &amp; time first."; return; }
+  var p=v.split("T"); var dp=p[0].split("-"), tp=(p[1]||"00:00").split(":");
+  var instant=zonedToUTC(+dp[0], +dp[1]-1, +dp[2], +tp[0], +tp[1]||0, $("tzFrom").value);
+  var html=ZONES.map(function(z){
+    var s=new Intl.DateTimeFormat("en-GB",{timeZone:z[1],weekday:"short",day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true}).format(instant);
+    return "<div><strong>"+esc(z[0])+":</strong> "+esc(s)+"</div>";
+  }).join("");
+  $("tzOut").innerHTML=html;
+});
+
+/* ================= 16. QR GENERATOR ================= */
+document.querySelectorAll("#qrGenTabs button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("#qrGenTabs button").forEach(function(x){x.classList.remove("active");});
+    document.querySelectorAll("#tool-qrgen .tabpane").forEach(function(x){x.classList.remove("active");});
+    b.classList.add("active"); $(b.getAttribute("data-pane")).classList.add("active");
+  });
+});
+function qrGenContent(){
+  var wifiActive=$("qgWifi").classList.contains("active");
+  if(wifiActive){
+    var ssid=$("qgSsid").value, pw=$("qgPass").value, sec=$("qgSec").value;
+    if(!ssid) return "";
+    function e(s){ return String(s).replace(/([\\;,:"'])/g,"\\$1"); }
+    return sec==="nopass"? "WIFI:T:nopass;S:"+e(ssid)+";;" : "WIFI:T:"+sec+";S:"+e(ssid)+";P:"+e(pw)+";;";
+  }
+  return $("qgTextIn").value.trim();
+}
+$("qgBtn").addEventListener("click", function(){
+  var content=qrGenContent(); var out=$("qgOut");
+  if(!content){ $("qgEncoded").textContent="Type a URL/text, or a Wi-Fi name, first."; return; }
+  if(typeof QRCode==="undefined"){ $("qgEncoded").textContent="The QR generator library could not be loaded — check your connection and reload."; return; }
+  out.innerHTML="";
+  new QRCode(out, {text:content, width:220, height:220, correctLevel: QRCode.CorrectLevel.M});
+  $("qgEncoded").textContent="Encoded content: "+content;
+});
+$("qgDlBtn").addEventListener("click", function(){
+  var cv=$("qgOut").querySelector("canvas"), img=$("qgOut").querySelector("img");
+  if(cv) dl(cv.toDataURL("image/png"), "qr-code.png");
+  else if(img && img.src) dl(img.src, "qr-code.png");
+  else $("qgEncoded").textContent="Generate a QR code first, then download it.";
+});
+
+/* ================= 17. DUPLICATE CHECKER ================= */
+$("dupBtn").addEventListener("click", function(){
+  var files=$("dupFiles").files, out=$("dupOut");
+  if(!files.length){ out.innerHTML='<div class="warn">Choose the files you want to compare first.</div>'; return; }
+  if(!(crypto && crypto.subtle)){ out.innerHTML='<div class="err">Secure hashing is not available in this browser context.</div>'; return; }
+  $("dupStatus").textContent="Hashing "+files.length+" file(s)…";
+  var jobs=Array.prototype.map.call(files, function(f){
+    return f.arrayBuffer().then(function(buf){ return crypto.subtle.digest("SHA-256", buf); }).then(function(h){
+      var hex=Array.prototype.map.call(new Uint8Array(h), function(b){ return b.toString(16).padStart(2,"0"); }).join("");
+      return {name:f.name, size:f.size, hash:hex};
+    });
+  });
+  Promise.all(jobs).then(function(res){
+    $("dupStatus").textContent="";
+    var groups={}; res.forEach(function(r){ (groups[r.hash]=groups[r.hash]||[]).push(r); });
+    var dups=Object.keys(groups).filter(function(k){ return groups[k].length>1; });
+    var totalWasted=0;
+    if(!dups.length){ out.innerHTML='<div class="okbox">No duplicates found — all '+res.length+' files have unique content.</div>'; return; }
+    var html='<div class="warn"><strong>'+dups.length+' duplicate group(s) found.</strong></div>';
+    dups.forEach(function(k, gi){
+      var g=groups[k]; totalWasted+=g[0].size*(g.length-1);
+      html+='<div class="out" style="margin-top:10px"><strong>Group '+(gi+1)+'</strong> — '+(g[0].size/1024).toFixed(1)+' KB each, SHA-256 <span class="mono">'+k.slice(0,16)+'…</span><br>'+
+        g.map(function(r){ return "• "+esc(r.name); }).join("<br>")+'</div>';
+    });
+    html+='<p class="note">Space you could free by keeping one copy of each group: about '+(totalWasted/1048576).toFixed(2)+' MB. Nothing was deleted — this tool only reports.</p>';
+    out.innerHTML=html;
+  }).catch(function(e){ $("dupStatus").textContent=""; out.innerHTML='<div class="err">Hashing failed: '+esc(e.message||e)+'</div>'; });
+});
+
+/* ================= 19. DOWNLOAD SELF (GitHub Pages) ================= */
+$("dlSelfBtn").addEventListener("click", function(){
+  var html="<!doctype html>\n"+document.documentElement.outerHTML;
+  dlBlob(new Blob([html],{type:"text/html"}), "index.html");
+});
+</script>
+</body>
+</html>
