@@ -148,6 +148,6 @@ MIT License — see [LICENSE](LICENSE). Free to use, copy, modify and share, for
 
 ## 👤 Author
 
-**Md. Sharif** — built for daily duty, roster and office work.
+**iFTAKHER_HRiDOY** — built for daily duty, roster and office work.
 
-*Made with VMS – Daily Work Tools. One Dashboard • All Essential Tools • Always Accessible.*
+*Made with NAFi-iT – Daily Work Tools. One Dashboard • All Essential Tools • Always Accessible.*
