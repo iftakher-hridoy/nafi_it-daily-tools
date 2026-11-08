@@ -10,7 +10,6 @@ A free, open-source, single-file dashboard for daily office work — duty hours,
 [![Made for](https://img.shields.io/badge/Made%20for-Daily%20office%20work-2563eb.svg)](#who-is-it-for)
 
 **Live demo:** `https://iftakher-hridoy.github.io/nafi_it-daily-tools/`  
-*(Replace `<your-username>` with your GitHub username after you turn on Pages — see [Make it live](#make-it-live-on-github-pages).)*
 
 ![VMS Daily Work Tools — dashboard preview](docs/screenshots/dashboard-preview.png)
 
