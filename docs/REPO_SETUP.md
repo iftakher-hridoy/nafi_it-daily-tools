@@ -6,8 +6,6 @@ This file is only a guide. Do these steps on GitHub after uploading the zip.
 
 - **Description:**
   `VMS – Daily Work Tools: one dashboard for duty hours, shift rosters, salary, OCR, QR, PDF, video and internet tools. Free, open source, single-file, hosted on GitHub Pages.`
-- **Website:**
-  `https://<your-username>.github.io/vms-daily-work-tools/`
 - **Topics (click Add topics):**
   `duty-calculator, shift-schedule, salary-calculator, ocr, qr-code, pdf-tools, video-converter, speed-test, github-pages, bangladesh, open-source, html-css-javascript`
 
